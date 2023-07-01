@@ -65,7 +65,14 @@ const sendErrorProd = (err, req, res) => {
 };
 
 const globalErrorHandler = (err, req, res, next) => {
-  let error = structuredClone(err);
+  let error = new AppError(
+    err.message,
+    err.statusCode,
+    err.path,
+    err.value,
+    err.code,
+    err.errmsg
+  );
   error.statusCode ||= INTERNAL_SERVER_ERROR;
   if (process.env.NODE_ENV === 'development') {
     return sendErrorDev(error, res);
